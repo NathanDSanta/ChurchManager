@@ -1,0 +1,12 @@
+*
+!*.*
+!*/
+*.exe
+.executables
+*.csv
+*.txt
+doc*/
+!prova*.txt
+!in*.txt
+!out*.txt
+!script*
