@@ -6,6 +6,7 @@
 *.csv
 *.txt
 doc*/
+build*/
 !prova*.txt
 !in*.txt
 !out*.txt
