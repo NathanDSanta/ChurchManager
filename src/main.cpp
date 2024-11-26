@@ -12,7 +12,7 @@
 //     return 0;
 // }
 #include <stdio.h>
-#include <sqlite3_export.h>
+#include <sqlite3.h>
  
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;

@@ -16,13 +16,8 @@ if (NOT Slint_FOUND)
   FetchContent_MakeAvailable(Slint)
 endif (NOT Slint_FOUND)
 
-include_directories(sqlite)
-add_library(sqlite3 STATIC sqlite/sqlite3.c sqlite/sqlite3.h)
-set_target_properties(sqlite3 PROPERTIES LINKER_LANGUAGE C)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_executable(ChurchManager src/main.cpp)
-target_link_libraries(ChurchManager PRIVATE Slint::Slint sqlite3)
+target_link_libraries(ChurchManager PRIVATE Slint::Slint)
 slint_target_sources(ChurchManager ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
