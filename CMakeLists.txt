@@ -19,6 +19,7 @@ endif (NOT Slint_FOUND)
 include_directories(sqlite)
 add_library(sqlite3 STATIC sqlite/sqlite3.c sqlite/sqlite3.h)
 set_target_properties(sqlite3 PROPERTIES LINKER_LANGUAGE C)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_executable(ChurchManager src/main.cpp)
 target_link_libraries(ChurchManager PRIVATE Slint::Slint sqlite3)
