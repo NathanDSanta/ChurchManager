@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.21) project(ChurchManager LANGUAGES CXX) find_package(Slint QUIET)
+cmake_minimum_required(VERSION 3.21) 
+project(ChurchManager LANGUAGES CXX) 
+
+find_package(Slint QUIET)
 if (NOT Slint_FOUND)
   message("Slint could not be located in the CMake module search path. Downloading it from Git and building it locally")
   include(FetchContent)
