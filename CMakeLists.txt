@@ -17,7 +17,7 @@ if (NOT Slint_FOUND)
 endif (NOT Slint_FOUND)
 
 # find_package(SQLite3 REQUIRED)
-include_directories(.)
+include_directories(sqlite)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 add_library(sqlite3 sqlite/sqlite3.dll)
 set_target_properties(sqlite3 PROPERTIES LINKER_LANGUAGE C)
