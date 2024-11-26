@@ -17,11 +17,12 @@ if (NOT Slint_FOUND)
 endif (NOT Slint_FOUND)
 
 # find_package(SQLite3 REQUIRED)
-# include_directories(${SQLITE3_INCLUDE_DIRS})
+# include_directories(.)
 
+add_library(sqlite3 sqlite/sqlite3.c)
 add_executable(ChurchManager WIN32 src/main.cpp)
 # target_link_libraries(${PROJECT_NAME} ${SQLITE3_LIBRARIES})
-target_link_libraries(ChurchManager PRIVATE Slint::Slint)
+target_link_libraries(ChurchManager PRIVATE Slint::Slint sqlite3)
 slint_target_sources(ChurchManager ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
