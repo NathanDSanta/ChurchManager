@@ -20,6 +20,7 @@ endif (NOT Slint_FOUND)
 # include_directories(.)
 
 add_library(sqlite3 sqlite/sqlite3.c)
+set_target_properties(sqlite3 PROPERTIES LINKER_LANGUAGE C)
 add_executable(ChurchManager WIN32 src/main.cpp)
 # target_link_libraries(${PROJECT_NAME} ${SQLITE3_LIBRARIES})
 target_link_libraries(ChurchManager PRIVATE Slint::Slint sqlite3)
