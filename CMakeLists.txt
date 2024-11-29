@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21) 
-project(ChurchManager LANGUAGES CXX) 
+project(ChurchManager LANGUAGES CXX)
 
 find_package(Slint QUIET)
 if (NOT Slint_FOUND)
@@ -16,7 +16,7 @@ if (NOT Slint_FOUND)
   FetchContent_MakeAvailable(Slint)
 endif (NOT Slint_FOUND)
 
-add_executable(ChurchManager src/main.cpp sqlite/sqlite3.o)
+add_executable(ChurchManager src/main.cpp sqlite/sqlite3.obj)
 target_link_libraries(ChurchManager PRIVATE Slint::Slint)
 slint_target_sources(ChurchManager ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
