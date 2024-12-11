@@ -1,12 +1,12 @@
 # build.ps1
 Param(
-  $type
+  $Type
 )
 
-If(-Not $type -eq ''){
+If($Type -eq ''){
   Write-Host "Configuring and building in Debug" 
   cmake -DCMAKE_BUILD_TYPE=Debug -B build
-} ElseIf($type -eq "Release"){
+} ElseIf($Type -eq "Release"){
   Write-Host "Configuring and building in Release" 
   cmake -DCMAKE_BUILD_TYPE=Release -B build
 }
