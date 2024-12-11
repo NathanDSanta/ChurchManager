@@ -23,11 +23,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.obj)
 else()
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.o)
-  set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+endif()
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}"
-  )
-endif()
+)
 
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
