@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.21) 
 project(ChurchManager LANGUAGES CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "-isystem ${CMAKE_SOURCE_DIR}/include")
 
 find_package(Slint QUIET)
 if (NOT Slint_FOUND)
