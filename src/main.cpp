@@ -1,19 +1,20 @@
-// #include "app-window.h"
-//
-// int WinMain(int argc, char **argv)
-// {
-//     auto ui = AppWindow::create();
-//
-//     ui->on_request_increase_value([&]{
-//         ui->set_counter(ui->get_counter() + 1);
-//     });
-//
-//     ui->run();
-//     return 0;
-// }
+#include "app-window.h"
+#include <sqlite3.h>
+#include <string>
 #include <stdio.h>
-#include  "../sqlite/sqlite3.h"
- 
+
+int main(int argc, char **argv)
+{
+    auto ui = MainWindow::create();
+
+    ui->on_request_query([&]{
+        ui->set_text("Hello World");
+    });
+
+    ui->run();
+    return 0;
+}
+
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;
   for(i=0; i<argc; i++){
@@ -23,7 +24,8 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   return 0;
 }
 
-int main(int argc, char **argv){
+int query(int argc, char **argv){
+  std::string ret;
   sqlite3 *db;
   char *zErrMsg = 0;
   int rc;
@@ -46,3 +48,4 @@ int main(int argc, char **argv){
   sqlite3_close(db);
   return 0;
 }
+
