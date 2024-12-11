@@ -24,6 +24,13 @@ else()
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.o)
 endif()
 
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY $<CONFIG:Debug> "${CMAKE_CURRENT_BINARY_DIR}/Debug"
+  LIBRARY_OUTPUT_DIRECTORY $<CONFIG:Release> "${CMAKE_CURRENT_BINARY_DIR}/Release"
+  RUNTIME_OUTPUT_DIRECTORY $<CONFIG:Debug> "${CMAKE_CURRENT_BINARY_DIR}/Debug"
+  RUNTIME_OUTPUT_DIRECTORY $<CONFIG:Release> "${CMAKE_CURRENT_BINARY_DIR}/Release"
+)
+
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Slint::Slint)
 slint_target_sources(${CMAKE_PROJECT_NAME} ui/app-window.slint)
