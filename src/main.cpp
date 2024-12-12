@@ -3,42 +3,37 @@
 #include <string>
 
 #include "app-window.h"
-#include "slint.h"
-#include "slint_string.h"
 #include "sqlite3.h"
 
 auto ui = MainWindow::create();
 
-
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
   int i;
-  slint::SharedString text = "";
   for (i = 0; i < argc; i++) {
-    text = (text + "\n" + std::string(azColName[i]) + " = " +
-                 (argv[i] ? std::string(argv[i]) : "NULL"));
+    ui->set_text( ui->get_text() + "\n" + std::string(azColName[i]) + " = " + (argv[i] ? std::string(argv[i]) : "NULL"));
   }
-  text = text + "\n";
-
+  ui->set_text( ui->get_text() + "\n");
   return 0;
 }
 
-int query(int argc, char *database, char *sentence) {
+int query(int argc, std::string database, std::string sentence) {
   std::string ret;
   sqlite3 *db;
   char *zErrMsg = 0;
   int rc;
 
+
   if (argc != 2) {
     ui->set_text("Usage: <program> DATABASE SQL-STATEMENT\n");
     return (1);
   }
-  rc = sqlite3_open(database, &db);
+  rc = sqlite3_open(database.data(), &db);
   if (rc) {
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
     return (1);
   }
-  rc = sqlite3_exec(db, sentence, callback, 0, &zErrMsg);
+  rc = sqlite3_exec(db, sentence.data(), callback, 0, &zErrMsg);
   if (rc != SQLITE_OK) {
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
@@ -55,10 +50,18 @@ int main(int argc, char **argv) {
     ui->window().set_fullscreen(fullscreen);
   });
 
-  ui->on_updatePerson([&] {
+  ui->on_textChange([&]{
+    std::string database = "test.db";
+    std::string qry = "select * from users;";
     ui->set_text("");
-    int worked = query(2, "test.db",
-                       "update users set name = 'Paul' where id = 'u1987173';");
+    int works = query(2, database, qry);
+  });
+
+  ui->on_updatePerson([&]{
+    std::string database = "test.db";
+    std::string qry = "update users set name = 'Paul' where id = 'u1987173';";
+    ui->set_text("");
+    int worked = query(2, database, qry);
     if (worked == 0) {
       ui->set_text(ui->get_text() + "Person Updated");
     }
