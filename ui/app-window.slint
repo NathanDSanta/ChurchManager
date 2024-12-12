@@ -1,21 +1,103 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, VerticalBox, StandardListView } from "std-widgets.slint";
+
+global Sizes { }
+
+global Icons { }
+
+global Palette {
+    in-out property <color> background: grey;
+    in-out property <color> primary: blue;
+    in-out property <color> secondary: purple;
+}
+
+global Callbacks {
+    callback fullscreen();
+}
+
+component SidebarButton inherits Rectangle {
+    in-out property text <=> txt.text;
+    callback clicked <=> touch.clicked;
+    background: touch.pressed ? Palette.primary : Palette.secondary;
+    width: 4rem;
+    height: 4rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    txt := Text {
+        x: (parent.width - self.width) / 2 + (touch.pressed ? 2px : 0);
+        y: (parent.height - self.height) / 2 + (touch.pressed ? 1px : 0);
+    }
+
+    touch := TouchArea { }
+}
+
+component Sidebar {
+    in property <int> buttons: 4;
+    VerticalBox {
+        alignment: start;
+        spacing: 0.5rem;
+        height: 100%;
+        width: 50px;
+        for i in buttons: SidebarButton {
+            text: "Button " + (i + 1);
+            clicked => {
+                Callbacks.fullscreen();
+            }
+        }
+    }
+}
 
 export component MainWindow inherits Window {
-  preferred-width:100%;
-  preferred-height:100%;
-  in-out property <string> text: "Nothin'";
-  title: "Church Manager";
-  callback request-query();
-  VerticalBox {
-    Text {
-      text: "Query: \{root.text}";
-    }
+    preferred-width: 1920px;
+    preferred-height: 1080px;
+    min-width: 1080px;
+    min-height: 600px;
+    background: Palette.background;
+    in property <string> text: "Fullscreen by default";
+    in property <[string]> elements: [];
+    title: "Church Manager";
+    callback fullscreen();
+    callback textChange();
+  callback updatePerson();
+    HorizontalLayout {
+        alignment: start;
+        Sidebar { }
 
-    Button {
-      text: "Select All Query";
-      clicked => {
-        root.request-query();
-      }
+      StandardListView {
+        width: 150px;
+        height: 150px;
+        model: [
+        
+      ];
     }
-  }
+        Text {
+            width: parent.width / 2 - 50px;
+            height: 100%;
+            vertical-alignment: center;
+            text: text;
+        }
+
+        VerticalBox {
+            width: parent.width / 2 - 50px;
+            height: 100%;
+            alignment: center;
+            Button {
+                height: 100px;
+                width: 200px;
+
+                text: "Query";
+                clicked => {
+                    textChange();
+                }
+            }
+            Button {
+                height: 100px;
+                width: 200px;
+
+                text: "Update";
+                clicked => {
+                    updatePerson();
+                }
+            }
+        }
+    }
 }

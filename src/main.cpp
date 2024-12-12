@@ -1,47 +1,45 @@
-#include "app-window.h"
-#include "sqlite3.h"
-#include <string>
 #include <stdio.h>
 
-int main(int argc, char **argv)
-{
-    auto ui = MainWindow::create();
+#include <string>
 
-    ui->on_request_query([&]{
-        ui->set_text("Hello World");
-    });
+#include "app-window.h"
+#include "slint.h"
+#include "slint_string.h"
+#include "sqlite3.h"
 
-    ui->run();
-    return 0;
-}
+auto ui = MainWindow::create();
 
-static int callback(void *NotUsed, int argc, char **argv, char **azColName){
+
+static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
   int i;
-  for(i=0; i<argc; i++){
-    printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+  slint::SharedString text = "";
+  for (i = 0; i < argc; i++) {
+    text = (text + "\n" + std::string(azColName[i]) + " = " +
+                 (argv[i] ? std::string(argv[i]) : "NULL"));
   }
-  printf("\n");
+  text = text + "\n";
+
   return 0;
 }
 
-int query(int argc, char **argv){
+int query(int argc, char *database, char *sentence) {
   std::string ret;
   sqlite3 *db;
   char *zErrMsg = 0;
   int rc;
 
-  if( argc!=3 ){
-    fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
-    return(1);
+  if (argc != 2) {
+    ui->set_text("Usage: <program> DATABASE SQL-STATEMENT\n");
+    return (1);
   }
-  rc = sqlite3_open(argv[1], &db);
-  if( rc ){
+  rc = sqlite3_open(database, &db);
+  if (rc) {
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
-    return(1);
+    return (1);
   }
-  rc = sqlite3_exec(db, argv[2], callback, 0, &zErrMsg);
-  if( rc!=SQLITE_OK ){
+  rc = sqlite3_exec(db, sentence, callback, 0, &zErrMsg);
+  if (rc != SQLITE_OK) {
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }
@@ -49,3 +47,23 @@ int query(int argc, char **argv){
   return 0;
 }
 
+int main(int argc, char **argv) {
+  bool fullscreen = true;
+
+  ui->on_fullscreen([&] {
+    fullscreen = !fullscreen;
+    ui->window().set_fullscreen(fullscreen);
+  });
+
+  ui->on_updatePerson([&] {
+    ui->set_text("");
+    int worked = query(2, "test.db",
+                       "update users set name = 'Paul' where id = 'u1987173';");
+    if (worked == 0) {
+      ui->set_text(ui->get_text() + "Person Updated");
+    }
+  });
+
+  ui->run();
+  return 0;
+}
