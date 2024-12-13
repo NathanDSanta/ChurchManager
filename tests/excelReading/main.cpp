@@ -5,7 +5,7 @@ using namespace std;
 
 int main (int argc, char *argv[]) {
   xlnt::workbook wb;
-  wb.load("example.xlsx");
+  wb.load("test.xlsx");
 
   auto ws = wb.active_sheet();
   
