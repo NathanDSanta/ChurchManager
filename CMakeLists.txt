@@ -46,6 +46,10 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/inc
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Slint::Slint)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE xlnt)
 slint_target_sources(${CMAKE_PROJECT_NAME} ui/app-window.slint)
+# On Windows, copy the Slint DLL next to the application binary so that it's found.
+if (WIN32)
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${CMAKE_PROJECT_NAME}> $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
+endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   message("Adding custom database copying command (Debug)")
   add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/databases/test.db  $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
@@ -55,7 +59,3 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 add_subdirectory(tests)
-# On Windows, copy the Slint DLL next to the application binary so that it's found.
-if (WIN32)
-  add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${CMAKE_PROJECT_NAME}> $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
-endif()
