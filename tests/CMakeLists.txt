@@ -26,3 +26,6 @@ target_include_directories(cppReadTest PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMA
 target_include_directories(sqliteTest PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/headers)
 add_custom_command(TARGET cppReadTest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/databases/test.db  $<TARGET_FILE_DIR:cppReadTest> COMMAND_EXPAND_LISTS)
 add_custom_command(TARGET excelReadTest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/tests/excelReading/test.xlsx  $<TARGET_FILE_DIR:excelReadTest> COMMAND_EXPAND_LISTS)
+if (WIN32)
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${CMAKE_PROJECT_NAME}> $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
+endif()
