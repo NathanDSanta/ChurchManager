@@ -21,6 +21,7 @@ endif (NOT Slint_FOUND)
 find_package(xlnt)
 if(NOT xlnt_FOUND)
   message("xlnt could not be located in the CMake module search path. Downloading it from Git and building it locally")
+  include(FetchContent)
   FetchContent_Declare(
     xlnt
     GIT_REPOSITORY https://github.com/tfussell/xlnt.git
@@ -57,5 +58,4 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
   add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/databases/data.db $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
 endif()
 
-project(Testing LANGUAGES CXX)
 add_subdirectory(tests)
