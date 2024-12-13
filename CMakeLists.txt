@@ -58,4 +58,5 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
   add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/databases/data.db $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
 endif()
 
+project(Tests LANGUAGES CXX)
 add_subdirectory(tests)
