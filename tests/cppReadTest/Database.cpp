@@ -44,11 +44,10 @@ vector<string> Database::query(string sentence, string type) const{
     else cout << "Type not considered" << endl;
 
     while (sqlite3_step(prQuery) == SQLITE_ROW) {
-        std::cout << "C1 => " << sqlite3_column_text(prQuery,0) << endl;
-        std::cout << "C2 => " << sqlite3_column_text(prQuery,1) << endl;
-        std::cout << "C3 => " << sqlite3_column_text(prQuery,2) << endl;
-        std::cout << "C4 => " << sqlite3_column_int(prQuery,3) << endl;
-        cout << endl;
+      for (int i = 0; i < sqlite3_column_count(prQuery); i++) {
+        std::cout << sqlite3_column_name(prQuery, i) << " => " << sqlite3_column_text(prQuery, i) << endl;
+      }
+      cout << endl;
     }
 
     sqlite3_finalize(prQuery);
