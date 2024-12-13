@@ -4,6 +4,7 @@
 
 #include "app-window.h"
 #include "sqlite3.h"
+#include "xlnt/xlnt.hpp"
 
 auto ui = MainWindow::create();
 
@@ -44,13 +45,22 @@ int query(int argc, std::string database, std::string sentence) {
 
 int main(int argc, char **argv) {
   bool fullscreen = true;
+  bool darkmode = false;
+  ui->window().set_fullscreen(fullscreen);
+  ui->set_DarkMode(darkmode);
 
-  ui->on_fullscreen([&] {
+  ui->on_switchDarkMode([&]{
+    darkmode = !darkmode; 
+    ui->set_DarkMode(darkmode);
+  });
+
+  ui->on_fullScreen([&] {
     fullscreen = !fullscreen;
     ui->window().set_fullscreen(fullscreen);
   });
 
-  ui->on_textChange([&]{
+
+  ui->on_selectAll([&]{
     std::string database = "test.db";
     std::string qry = "select * from users;";
     ui->set_text("");
@@ -65,7 +75,7 @@ int main(int argc, char **argv) {
     if (worked == 0) {
       ui->set_text(ui->get_text() + "Person Updated");
     }
-  });
+   });
 
   ui->run();
   return 0;

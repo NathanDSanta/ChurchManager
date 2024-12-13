@@ -18,6 +18,17 @@ if (NOT Slint_FOUND)
   FetchContent_MakeAvailable(Slint)
 endif (NOT Slint_FOUND)
 
+find_package(xlnt)
+if(NOT xlnt_FOUND)
+  message("xlnt could not be located in the CMake module search path. Downloading it from Git and building it locally")
+  FetchContent_Declare(
+    xlnt
+    GIT_REPOSITORY https://github.com/tfussell/xlnt.git
+    GIT_TAG master
+  )
+FetchContent_MakeAvailable(xlnt)
+endif()
+
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.obj)
@@ -30,8 +41,9 @@ else()
 endif()
 set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY SLINT_EMBED_RESOURCES embed-files)
 
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/headers)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Slint::Slint)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE xlnt)
 slint_target_sources(${CMAKE_PROJECT_NAME} ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
@@ -44,3 +56,6 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
   message("Adding custom database copying command (Release)")
   add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/databases/data.db $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}> COMMAND_EXPAND_LISTS)
 endif()
+
+project(Testing LANGUAGES CXX)
+add_subdirectory(tests)

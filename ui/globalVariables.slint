@@ -1,0 +1,18 @@
+
+export global Sizes { }
+
+export global Icons { }
+
+export global Palette {
+    in-out property <bool> DarkMode: true;
+    in-out property <color> background: DarkMode ? white : black;
+    in-out property <color> primary: DarkMode ? purple : lightpink;
+    in-out property <color> secondary: DarkMode ? blue : lightblue;
+    in-out property <color> text: DarkMode ? black : white;
+}
+
+export global Callbacks {
+    callback fullscreen();
+    callback selectAll();
+    callback switchDarkMode();
+}
