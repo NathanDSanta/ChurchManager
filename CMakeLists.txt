@@ -30,6 +30,17 @@ if(NOT xlnt_FOUND)
 FetchContent_MakeAvailable(xlnt)
 endif()
 
+find_package(libharu)
+if(NOT libharu_FOUND)
+  message("libharu could not be located in the CMake module search path. Downloading it from Git and building it locally")
+  include(FetchContent)
+  FetchContent_Declare(
+    libharu
+    GIT_REPOSITORY https://github.com/libharu/libharu.git
+    GIT_TAG master
+  )
+FetchContent_MakeAvailable(libharu)
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.obj)
@@ -45,6 +56,7 @@ set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY SLINT_EMBED_RESOURCES embed-f
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/headers)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Slint::Slint)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE xlnt)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE hpdf)
 slint_target_sources(${CMAKE_PROJECT_NAME} ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
