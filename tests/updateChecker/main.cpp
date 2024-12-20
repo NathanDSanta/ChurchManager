@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <curl/curl.h>
 #include <json/json.h>
@@ -28,12 +29,12 @@ std::string downloadJson(const std::string& url) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteStringCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects
         res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-
         if (res != CURLE_OK) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         }
+        curl_easy_cleanup(curl);
     }
 
     return readBuffer;
@@ -52,6 +53,9 @@ bool downloadFile(const std::string& url, const std::string& outFilename) {
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteFileCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, outFile);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects
+            curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0");
+            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);  // Enable verbose output
             res = curl_easy_perform(curl);
             fclose(outFile);
 
