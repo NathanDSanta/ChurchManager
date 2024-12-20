@@ -3,6 +3,8 @@ project(ChurchManager LANGUAGES CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug)
 
+# ADDITIONAL LIBRARIES
+
 find_package(Slint QUIET)
 if (NOT Slint_FOUND)
   message("Slint could not be located in the CMake module search path. Downloading it from Git and building it locally")
@@ -42,6 +44,33 @@ if(NOT libharu_FOUND)
 FetchContent_MakeAvailable(libharu)
 endif()
 
+find_package(jsoncpp)
+if(NOT jsoncpp_FOUND)
+  message( "Jsoncpp could not be located in the cmake module search path. Downloading it from Git and building it locally" )
+  include(FetchContent)
+  FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+    GIT_TAG master
+  )
+  FetchContent_MakeAvailable(jsoncpp)
+endif()
+
+
+find_package(curl)
+if(NOT curl_FOUND)
+  message( "Curl could not be located in the cmake module search path. Downloading it from Git and building it locally" )
+  include(FetchContent)
+  FetchContent_Declare(
+    curl
+    GIT_REPOSITORY https://github.com/curl/curl.git
+    GIT_TAG master
+  )
+  FetchContent_MakeAvailable(curl)
+endif()
+
+
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   add_executable(${CMAKE_PROJECT_NAME} src/main.cpp sqlite/sqlite3.obj)
 else()
@@ -57,6 +86,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/inc
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Slint::Slint)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE xlnt)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE hpdf)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE jsoncpp)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libcurl)
 slint_target_sources(${CMAKE_PROJECT_NAME} ui/app-window.slint)
 # On Windows, copy the Slint DLL next to the application binary so that it's found.
 if (WIN32)
