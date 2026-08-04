@@ -1,0 +1,15 @@
+{
+  "appId": "com.NathanDSanta.ChurchManager",
+  "files": ["dist-electron", "dist-renderer"],
+  "icon": "./icon.png",
+  "mac": {
+    "target": ["dmg", "zip"]
+  },
+  "linux": {
+    "target": ["AppImage", "deb", "rpm"],
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
